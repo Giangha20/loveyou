@@ -218,10 +218,294 @@ p{margin-top:10px;}
   .circle{width:240px;height:240px;}
   .card{width:100px;height:140px;}
 }
+/* ===== HIỆU ỨNG CHIỀU SÂU (AN TOÀN 3D) ===== */
+.depth-layer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+
+.depth-layer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(
+    circle at top,
+    rgba(255,255,255,.12),
+    transparent 55%);
+}
+
+.depth-layer::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.15),
+    transparent 40%,
+    rgba(0,0,0,.2)
+  );
+}
+
+/* nội dung luôn nổi trên */
+.container{
+  position:relative;
+  z-index:2;
+}
+/* ===== CON VẬT CHẠY QUA ===== */
+.pet{
+  position:fixed;
+  bottom:20px;
+  left:-120px;
+  font-size:48px;
+  z-index:1;
+  pointer-events:none;
+  animation:runPet 4s linear forwards;
+}
+
+@keyframes runPet{
+  from{
+    transform:translateX(0) scaleX(1);
+  }
+  to{
+    transform:translateX(calc(100vw + 200px)) scaleX(1);
+  }
+}
+/* ===== BƯỚM BAY ===== */
+.butterfly{
+  position:fixed;
+  font-size:28px;
+  pointer-events:none;
+  z-index:1;
+  animation:flyFlutter linear forwards;
+}
+
+@keyframes flyFlutter{
+  0%{
+    transform:translate(0,0) scale(1) rotate(0deg);
+    opacity:0;
+  }
+  10%{opacity:1}
+  100%{
+    transform:
+      translate(var(--x),var(--y))
+      scale(1.2)
+      rotate(360deg);
+    opacity:0;
+  }
+}
+/* ===== BƯỚM ĐẬU LÊN CHỮ ===== */
+.butterfly{
+  position:fixed;
+  font-size:26px;
+  pointer-events:none;
+  z-index:3;
+  transition:transform 1.5s ease;
+}
+
+.butterfly.perch{
+  animation:none !important;
+  transform:scale(1.2);
+}
+/* ===== BƯỚM VỖ CÁNH ===== */
+.butterfly{
+  position:fixed;
+  font-size:26px;
+  pointer-events:none;
+  z-index:2;
+  animation:
+    flap .6s ease-in-out infinite;
+}
+
+/* vỗ cánh */
+@keyframes flap{
+  0%,100%{ transform:scaleX(1) }
+  50%{ transform:scaleX(.7) }
+}
+/* ===== NÚT QUAY LẠI – UI ĐẸP ===== */
+#backWrap{
+  position:fixed;
+  top:20px;
+  left:20px;
+  z-index:100000;        /* 🔥 CAO HƠN TẤT CẢ */
+  pointer-events:auto;
+}
+
+#backToLetter{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  transition:transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+}
+
+#backToLetter .icon{
+  font-size:18px;
+}
+
+#backToLetter:hover{
+  transform:translateY(-2px) scale(1.05);
+  box-shadow:0 12px 28px rgba(0,0,0,.3);
+}
+
+/* hiệu ứng rời trang */
+body.page-exit{
+  opacity:0;
+  transition:opacity .6s ease;
+}
+/* ===== RÈM / VẢI CHE ===== */
+#curtain{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  pointer-events:auto;
+}
+
+.curtain{
+  width:50%;
+  height:100%;
+  background:
+    linear-gradient(135deg,#8b0000,#c0392b);
+  background-size:cover;
+  transition:transform 1.2s ease;
+}
+
+/* tạo nếp vải */
+.curtain::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(
+      to right,
+      rgba(255,255,255,.15),
+      rgba(255,255,255,.05) 12px
+    );
+}
+
+.curtain.left{
+  transform:translateX(0);
+}
+
+.curtain.right{
+  transform:translateX(0);
+}
+
+#curtain.open .left{
+  transform:translateX(-100%);
+}
+
+#curtain.open .right{
+  transform:translateX(100%);
+}
+
+/* chữ hướng dẫn */
+.curtain-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  font-size:22px;
+  letter-spacing:1px;
+  animation:pulse 2s infinite;
+  pointer-events:none;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:.6}
+  50%{opacity:1}
+}
+
+/* khi mở xong thì ẩn hẳn */
+#curtain.hide{
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .6s ease;
+}
+/* ===== PC ENHANCEMENT (KHÔNG ĐỤNG CODE CŨ) ===== */
+@media (min-width: 1024px){
+
+  body{
+    filter:saturate(1.08) contrast(1.05);
+  }
+
+  .container{
+    transform:scale(1.05);
+  }
+
+  .circle{
+    transform:translateZ(0);
+    will-change:transform;
+  }
+
+  .card{
+    box-shadow:
+      0 20px 40px rgba(0,0,0,.35),
+      inset 0 0 0 rgba(255,255,255,.1);
+  }
+}
+@media (min-width:1024px){
+  .curtain{
+    background:
+      linear-gradient(
+        135deg,
+        #7a0000,
+        #c0392b,
+        #ff7675
+      );
+    box-shadow:
+      inset 0 0 80px rgba(0,0,0,.45);
+  }
+
+  .curtain-text{
+    letter-spacing:2px;
+    font-size:26px;
+  }
+}
+@media (min-width:1024px){
+  .butterfly,
+  .heart,
+  .click-heart{
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
+    will-change:transform,opacity;
+  }
+}
+@media (min-width:1024px){
+  *{
+    backface-visibility:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+}
+
 </style>
 </head>
 
 <body>
+ <!-- ===== LỚP VẢI CHE ===== -->
+<div id="curtain">
+  <div class="curtain left"></div>
+  <div class="curtain right"></div>
+  <div class="curtain-text">✨ Nhấn để mở ✨</div>
+</div>
+
+<!-- ===== NÚT QUAY LẠI MỞ THƯ (FIXED) ===== -->
+<div id="backWrap">
+  <button id="backToLetter">
+    <span class="icon">💌</span>
+    <span class="text">Mở lại thư</span>
+  </button>
+</div>
 
 <div class="container">
   <h1 class="love-text">
@@ -251,7 +535,7 @@ p{margin-top:10px;}
 
       <div class="card"><div class="card-inner">
         <div class="card-front"><img src="z7310320002736_7280947394653cd43b8a0a3cc6e92b60.jpg"></div>
-        <div class="card-back">💖 Nghàn lần yêu em 💖</div>
+        <div class="card-back">💖 Ngàn lần yêu em 💖</div>
       </div></div>
 
     </div>
@@ -266,6 +550,51 @@ p{margin-top:10px;}
 <audio id="music" loop src="yeulacuoi.mp3"></audio>
 
 <script>
+  /* ===== CHỮ CẢM XÚC TỰ ĐỔI ===== */
+const messages=[
+  "Mỗi khoảnh khắc bên em đều là phép màu ✨",
+  "Anh yêu em hơn hôm qua một chút 💖",
+  "Em là điều ngọt ngào nhất 🍓",
+  "Có em, thế giới dịu dàng hơn 🌸",
+  "Cảm ơn vì đã ở đây cùng anh 💕"
+];
+
+let msgIndex=0;
+setInterval(()=>{
+  const p=document.querySelector(".sub-text");
+  if(!p) return;
+  p.style.opacity=0;
+  setTimeout(()=>{
+    msgIndex=(msgIndex+1)%messages.length;
+    p.innerText=messages[msgIndex];
+    p.style.opacity=1;
+  },500);
+},5000);
+/* ===== ĐẾM NGÀY YÊU ===== */
+const loveDay=new Date("2024-02-14"); // 👈 đổi ngày cho đúng của bạn
+const now=new Date();
+const days=Math.floor((now-loveDay)/(1000*60*60*24));
+
+const p=document.querySelector(".sub-text");
+if(p){
+  p.innerHTML += `<br>💞 Đã bên nhau ${days} ngày`;
+}
+/* ===== ÁNH SÁNG THEO CHUỘT ===== */
+const spot=document.createElement("div");
+spot.style.position="fixed";
+spot.style.inset="0";
+spot.style.pointerEvents="none";
+spot.style.background=
+  "radial-gradient(circle at 50% 50%, rgba(255,255,255,.18), transparent 40%)";
+document.body.appendChild(spot);
+
+document.addEventListener("mousemove",e=>{
+  spot.style.background=
+    `radial-gradient(circle at ${e.clientX}px ${e.clientY}px,
+      rgba(255,255,255,.18),
+      transparent 40%)`;
+});
+
 /* ===== NHẠC ===== */
 const music=document.getElementById("music");
 let playing=false;
@@ -366,6 +695,186 @@ function toggleSpin(){
   circle.style.animationPlayState=spinning?"running":"paused";
   spinBtn.innerText=spinning?"⏸️ Dừng quay":"▶️ Quay ảnh";
 }
+/* ===== TẠO CON VẬT CHẠY ===== */
+/* ===== 2–3 CON CHẠY XẾP DỌC ===== */
+const pets = ["🐱","🐶","🐰","🦊","🐻"];
+
+function runPetsGroup(){
+  // tránh spam quá nhiều nhóm
+  if(document.querySelectorAll(".pet").length > 0) return;
+
+  const count = 2 + Math.floor(Math.random()*2); // 2 hoặc 3 con
+  const startBottom = 20 + Math.random()*40; // vị trí bắt đầu
+  const gap = 45; // khoảng cách dọc
+
+  for(let i=0;i<count;i++){
+    const pet = document.createElement("div");
+    pet.className = "pet";
+    pet.innerText = pets[Math.floor(Math.random()*pets.length)];
+    pet.style.bottom = (startBottom + i*gap) + "px";
+
+    document.body.appendChild(pet);
+    setTimeout(()=>pet.remove(),4000);
+  }
+}
+
+/* chạy mỗi 1–2 giây */
+function petsLoop(){
+  const delay = 1000 + Math.random()*1000;
+  setTimeout(()=>{
+    if(!document.hidden) runPetsGroup();
+    petsLoop();
+  },delay);
+}
+petsLoop();
+
+
+// 1-2 giây mới chạy (không lag)
+function randomPetLoop(){
+  const delay = 1000 + Math.random()*1000; // 1–2 giây
+  setTimeout(()=>{
+    if(!document.hidden) runPet();
+    randomPetLoop();
+  },delay);
+}
+randomPetLoop();
+/* ===== BƯỚM BAY LUNG TUNG ===== */
+const butterflies = ["🦋","🦋","✨"];
+
+function createButterfly(){
+  if(document.querySelectorAll(".butterfly").length > 6) return;
+
+  const b = document.createElement("div");
+  b.className = "butterfly";
+  b.innerText = butterflies[Math.floor(Math.random()*butterflies.length)];
+
+  // vị trí bắt đầu
+  const startX = Math.random()*window.innerWidth;
+  const startY = window.innerHeight + 30;
+
+  b.style.left = startX + "px";
+  b.style.top = startY + "px";
+
+  // hướng bay ngẫu nhiên
+  b.style.setProperty("--x", (Math.random()*200 - 100) + "px");
+  b.style.setProperty("--y", (-300 - Math.random()*300) + "px");
+
+  // thời gian bay (mượt)
+  const duration = 6 + Math.random()*4;
+  b.style.animationDuration = duration + "s";
+
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(), duration*1000);
+}
+
+/* tạo bướm mỗi 1–2 giây */
+function butterflyLoop(){
+  const delay = 1000 + Math.random()*1000;
+  setTimeout(()=>{
+    if(!document.hidden) createButterfly();
+    butterflyLoop();
+  },delay);
+}
+butterflyLoop();
+/* ===== BƯỚM BAY TỰ DO ===== */
+function createFreeButterfly(){
+  if(document.querySelectorAll(".butterfly").length > 6) return;
+
+  const b = document.createElement("div");
+  b.className = "butterfly";
+  b.innerText = "🦋";
+
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  // chọn hướng bay
+  const dir = Math.floor(Math.random()*4);
+  let startX, startY, endX, endY;
+
+  switch(dir){
+    case 0: // trái → phải
+      startX = -50; startY = Math.random()*h;
+      endX = w+50; endY = Math.random()*h;
+      b.style.transform += " scaleX(1)";
+      break;
+    case 1: // phải → trái
+      startX = w+50; startY = Math.random()*h;
+      endX = -50; endY = Math.random()*h;
+      b.style.transform += " scaleX(-1)";
+      break;
+    case 2: // trên → dưới
+      startX = Math.random()*w; startY = -50;
+      endX = Math.random()*w; endY = h+50;
+      break;
+    case 3: // dưới → trên
+      startX = Math.random()*w; startY = h+50;
+      endX = Math.random()*w; endY = -50;
+      break;
+  }
+
+  b.style.left = startX + "px";
+  b.style.top = startY + "px";
+  document.body.appendChild(b);
+
+  // bay mượt
+  const duration = 6 + Math.random()*4;
+  b.animate(
+    [
+      { transform: b.style.transform + " translate(0,0)" },
+      { transform: b.style.transform + ` translate(${endX-startX}px,${endY-startY}px)` }
+    ],
+    {
+      duration: duration*1000,
+      easing: "ease-in-out",
+      fill: "forwards"
+    }
+  );
+
+  setTimeout(()=>b.remove(), duration*1000);
+}
+
+/* tạo bướm liên tục nhưng nhẹ */
+function butterflyLoop(){
+  const delay = 1200 + Math.random()*1200; // 1–2s
+  setTimeout(()=>{
+    if(!document.hidden) createFreeButterfly();
+    butterflyLoop();
+  },delay);
+}
+butterflyLoop();
+
+/* ===== QUAY LẠI MỞ THƯ – FIX CHẮC ===== */
+document.addEventListener("DOMContentLoaded",()=>{
+  const backBtn = document.getElementById("backToLetter");
+  if(!backBtn) return;
+
+  backBtn.addEventListener("click",()=>{
+    document.body.classList.add("page-exit");
+
+    setTimeout(()=>{
+      window.location.href = "thu.html";
+    },600);
+  });
+});
+/* ===== MỞ RÈM ===== */
+document.addEventListener("DOMContentLoaded",()=>{
+  const curtain = document.getElementById("curtain");
+  if(!curtain) return;
+
+  curtain.addEventListener("click",()=>{
+    curtain.classList.add("open");
+
+    // sau khi mở xong → ẩn hẳn
+    setTimeout(()=>{
+      curtain.classList.add("hide");
+    },1200);
+  });
+});
+/* ===== PC PERFORMANCE HINT (KHÔNG ĐỔI LOGIC) ===== */
+if(window.innerWidth >= 1024){
+  document.body.style.willChange = "transform";
+}
+
 </script>
 
 </body>
